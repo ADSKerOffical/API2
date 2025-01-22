@@ -1,0 +1,7 @@
+local api = loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/API2/refs/heads/main/Source"))()
+
+for i = 1, 8 do
+  if api.Number:IsEven(i) == true then
+print(i)
+  end
+end
