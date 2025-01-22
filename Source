@@ -60,7 +60,7 @@ function Api.String:HasSymbol(str, symbol)
   if type(str) ~= "string" or type(symbol) ~= "string" then
    return nil
   end
-   return sting.find(str, symbol) ~= nil
+   return string.find(str, symbol) ~= nil
 end
 
 function Api.String:RandomString(num)
