@@ -6,6 +6,8 @@ Api.Chat = {}
 Api.Sound = {}
 Api.Client = {}
 Api.Color = {}
+Api.Table = {}
+Api.Variable = {}
 
 function Api.Number:Range(num, min, max)
   if not tonumber(num) or not tonumber(min) or not tonumber(max) then
@@ -117,6 +119,69 @@ end
 function Api.Color:RGBToHex(color)
         return string.format("#%02X%02X%02X", color.R * 0xFF,
                 color.G * 0xFF, color.B * 0xFF)
+end
+
+function Api.Table:GetObjects(tbl, bool)
+  if typeof(tbl) == "Instance" then
+local tyy = {}
+ for _, pu in ipairs(tbl:GetDescendants()) do
+     if bool == true then
+   table.insert(tyy, pu:GetFullName())
+     else
+   table.insert(tyy, pu)
+     end
+ end
+  return tyy
+    else
+local tyy = {}
+ for _, pu in ipairs(tbl) do
+   table.insert(tyy, pu)
+ end
+ return tyy
+  end
+end
+
+function Api.Table:Copy(tbl)
+  if type(tbl) ~= "table" then
+return "nat"
+  end
+  
+  local taoi = {}
+   for key, value in pairs(tbl) do
+      taoi[key] = value
+   end
+    return taoi
+end
+
+function Api.Table:DeepCopy(tbl)
+  local function deepcopy(orig)
+            local copy = {}
+            for k, v in pairs(orig) do
+                if type(v) == "table" then
+                    copy[k] = deepcopy(v)
+                else
+                    copy[k] = v
+                end
+            end
+        return copy
+        end
+      return deepcopy(tbl)
+end
+
+function Api.Table:IsReadonly(tbl)
+  if type(tbl) == "table" then
+    if setreadonly and isreadonly then
+return isreadonly(tbl)
+    end
+  end
+end
+
+function Api.Variable:IsNil(var)
+  return var == nil
+end
+
+function Api.Variable:IsGlobal(var)
+  return _G[var] ~= nil
 end
 
 return Api
