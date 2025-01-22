@@ -1,0 +1,122 @@
+local Api = {}
+Api.Number = {}
+Api.String = {}
+Api.Players = {}
+Api.Chat = {}
+Api.Sound = {}
+Api.Client = {}
+Api.Color = {}
+
+function Api.Number:Range(num, min, max)
+  if not tonumber(num) or not tonumber(min) or not tonumber(max) then
+    error("Api.Number:Range requires numeric arguments")
+  end
+    if min > max then
+        error("Api.Number:Range: min must be less or equal to max")
+    end
+  return num >= min and num <= max
+end
+
+function Api.Number:IsEven(number)
+  if type(number) == "number" then
+    return number % 2 == 0
+  else
+    return nil
+  end
+end
+
+function Api.Number:IsNegative(number)
+    if type(number) == "number" then
+        return number < 0
+    else
+        return nil
+    end
+end
+
+function Api.Number:IsInteger(number)
+  if type(number) ~= "number" then
+     return nil
+   end
+  return number == math.floor(number)
+end
+
+function Api.String:Length(str)
+  if type(str) ~= "string" then
+   return nil
+  end
+   return #str
+end
+
+function Api.String:HasNumber(str)
+  if type(str) ~= "string" then
+    return nil
+  end
+   return string.find(str, "%d") ~= nil
+end
+
+function Api.String:HasSymbol(str, symbol)
+  if type(str) ~= "string" or type(symbol) ~= "string" then
+   return nil
+  end
+   return sting.find(str, symbol) ~= nil
+end
+
+function Api.String:RandomString(num)
+  if type(num) ~= "number" then
+   return nil
+  end
+ local array = {}
+ for i = 1, num do
+  array[i] = string.char(math.random(32, 126))
+ end
+ return table.concat(array)
+end
+
+function Api.Color:Color3ToHex(color)
+   if typeof(color) ~= "Color3" then
+    return nil
+   end
+  return string.upper(color:ToHex())
+end
+
+function Api.String:ToRich(str, size, color)
+  if type(str) == nil or type(size) ~= "number" or typeof(color) ~= "Color3" then
+ return "nas"
+  end
+local hexC = Api.Color:Color3ToHex(color)
+   if type(hexC) ~= "string" or typeof(color) ~= "Color3" then
+   return "nas"
+    end
+   local html = string.format('<p><font size="%d" color="%s">%s</font></p>', size, hexC, str)
+    return html
+end
+
+function Api.Client:SimulateButton(key)
+ if type(key) ~= "string" then return nil end
+  game:GetService("VirtualInputManager"):SendKeyEvent(true, key , false , game)
+end
+
+function Api.Client:GetHwid()
+  return gethwid() or game:GetService("RbxAnalyticsService"):GetClientId()
+end
+
+function Api.Color:ToRGB(Color)
+  return {R = Color.R, G = Color.G, B = Color.B}
+end
+
+function Api.Color:FromRGB(Color)
+  return Color3.fromRGB(Color.R, Color.G, Color.B)
+end
+
+function Api.Color:FromHex(hex)
+        local r, g, b = string.match(hex, "^#?(%w%w)(%w%w)(%w%w)$")
+        return Color3.fromRGB(tonumber(r, 16),
+                tonumber(g, 16), tonumber(b, 16))
+end
+
+function Api.Color:RGBToHex(color)
+        return string.format("#%02X%02X%02X", color.R * 0xFF,
+                color.G * 0xFF, color.B * 0xFF)
+end
+
+return Api
