@@ -1,0 +1,10 @@
+local api = loadstring(game:HttpGet("https://raw.githubusercontent.com/ADSKerOffical/API2/refs/heads/main/Source"))()
+
+Example:
+
+for _, plr in ipairs(game.Players:GetPlayers()) do
+  print(plr.Name .. " " .. #api.Players:GetPlayerFriendsCountFromId(plr.UserId))
+end
+
+-- GetPlayerFriendsCountFromId return table from Roblox page from https://friends.roblox.com/v1/users/{userId}/friends
+-- You can use 3 properties: name, id, displayName
