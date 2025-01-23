@@ -234,6 +234,55 @@ local HttpService = game:GetService("HttpService")
     return 0
 end
 
+function Api.Players:GetPlayerBadgeCountFromId(userId)
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+    local allBadges = {}
+    local cursor = nil
+
+    repeat
+        local url = string.format("https://badges.roproxy.com/v1/users/%d/badges?limit=100&sortOrder=Asc", userId)
+        if cursor then
+            url = url .. "&cursor=" .. cursor
+        end
+
+        local success, response = pcall(function()
+            return game:HttpGetAsync(url)
+        end)
+
+        if not success then
+            warn("Error during HTTP request: " .. tostring(response))
+            return nil
+        end
+
+        local decoded
+        local success2, response2 = pcall(function()
+            decoded = HttpService:JSONDecode(response)
+        end)
+
+        if not success2 then
+            warn("Error decoding JSON: " .. tostring(response2))
+            return nil
+        end
+
+        if decoded and decoded.data then
+            for _, badgeData in ipairs(decoded.data) do
+                table.insert(allBadges, badgeData)
+            end
+            cursor = decoded.nextPageCursor
+        else
+            warn("Invalid JSON format or no data.")
+            return nil
+        end
+    until not cursor
+
+    if allBadges then
+        return #allBadges
+    end
+
+    return 0
+end
+
 function Api.Players:GetPlayerFriendsCountFromId(userId)
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
