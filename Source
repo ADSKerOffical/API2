@@ -234,4 +234,59 @@ local HttpService = game:GetService("HttpService")
     return 0
 end
 
+function Api.Players:GetPlayerFriendsCountFromId(userId)
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+    local allFriends = {}
+    local cursor = nil
+
+    repeat
+        local url = string.format("https://friends.roblox.com/v1/users/%d/friends", userId)
+        if cursor then
+            url = url .. "&cursor=" .. cursor
+        end
+
+        local success, response = pcall(function()
+            return game:HttpGetAsync(url)
+        end)
+
+        if not success then
+            warn("Error during HTTP request: " .. tostring(response))
+            return nil
+        end
+
+        local decoded
+        local success2, response2 = pcall(function()
+            decoded = HttpService:JSONDecode(response)
+        end)
+
+        if not success2 then
+            warn("Error decoding JSON: " .. tostring(response2))
+            return nil
+        end
+
+        if decoded and decoded.data then
+            for _, friendData in ipairs(decoded.data) do
+                table.insert(allFriends, friendData)
+            end
+            cursor = decoded.nextPageCursor
+        else
+            warn("Invalid JSON format or no data")
+            return nil
+        end
+
+    until not cursor
+
+    return allFriends
+end
+
+function Api.Players:GetPlayerByLowerName(playerName)
+ for _, player in ipairs(game.Players:GetPlayers()) do
+  if string.find(player.Name:lower(), playerName:lower()) then
+   return player
+  end
+ end
+ return nil
+end
+
 return Api
