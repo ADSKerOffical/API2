@@ -345,19 +345,6 @@ end
 
 function Api.Players:GetUserGroupsAsync(userId)
 local HttpService = game:GetService("HttpService")
--- [[ groups statistics:
- table: group.data
- group properties: group.group.name, group.group.id, group.group.owner, group.group.description, group.group.memberCount, group.group.publicEntryAllowed, group.group.isBuildersClubOnly
- group role properies: group.role.id, group.role.name, group.role.rank
- group owner properties: group.group.owner. (userId, username, displayName, hasVerifiedBadge)
- 
- example:
- 
- for _, groupData in ipairs(groups.data) do -- GetUserGroupsAsync return table
-   print(groupData.group.name) -- and so on
- end
-]]
-
     local endpoint = "https://groups.roproxy.com/v1/users/"
     local url = endpoint .. userId .. "/groups/roles"
 
