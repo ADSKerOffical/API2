@@ -370,4 +370,46 @@ local HttpService = game:GetService("HttpService")
     return decoded, nil
 end
 
+function Api.Number:Compare(num1, num2)
+   if type(num1) ~= "number" or type(num2) ~= "number" then
+warn("Both variables must be numbers")
+ return nil
+   end
+  return num1 > num2
+end
+
+function Api.Number:IsWholeSqrt(number)
+  if number < 0 then
+return "nan"
+ elseif number == nil then
+warn("The number is missing or is nil")
+return nil
+ elseif type(number) ~= "number" then
+warn("The variable must be a number")
+return nil
+  end
+   
+   local sqrt = math.sqrt(number)
+   return math.floor(sqrt) == sqrt
+end
+
+function Api.Number:Sqrt(index, number)
+ if type(number) ~= "number" or type(index) ~= "number" then
+warn("The number and index must be numbers")
+  return nil
+ end
+    if number < 0 then
+warn("The number cannot be negative")
+ return "nan"
+  elseif index < 0 then
+warn("The index cannot be negative")
+ return "nan"
+    end
+  return number ^ (1/index)
+end
+
+function Api.Number:GetNumberFromSqrt(index, number)
+  return number ^ index
+end
+
 return Api
