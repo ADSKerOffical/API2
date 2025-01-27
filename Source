@@ -412,4 +412,31 @@ function Api.Number:GetNumberFromSqrt(index, number)
   return number ^ index
 end
 
+function Api.String:AddSymbols(str, symbol)
+  local newStr = ""
+  for i = 1, #str do
+    newStr = newStr .. string.sub(str, i, i) .. symbol
+  end
+  return newStr
+end
+
+function Api.String:AddToEnd(str1, str2)
+  return str1 .. str2
+end
+
+function Api.Number:IntoNotation(number)
+    if number >= 1000000000 then
+        local b_value = number / 1000000000
+        return string.format("%.3fB", b_value)
+    elseif number >= 1000000 then
+       local m_value = number / 1000000
+       return string.format("%.3fM", m_value)
+    elseif number >= 1000 then
+        local k_value = number / 1000
+        return string.format("%.3fK", k_value)
+    else
+        return tostring(number)
+    end
+end
+
 return Api
