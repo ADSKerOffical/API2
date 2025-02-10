@@ -573,4 +573,14 @@ return nil
   end
 end
 
+function Api.Syn:GetProperties(instance)
+    local properties = {}
+    for _, propertyName in ipairs(game:GetService("ReflectionService"):GetPropertyNames(instance.ClassName)) do
+        if instance[propertyName] ~= nil then
+            properties[propertyName] = instance[propertyName]
+        end
+    end
+  return properties
+end
+
 return Api
