@@ -8,6 +8,7 @@ Api.Client = {}
 Api.Color = {}
 Api.Table = {}
 Api.Variable = {}
+Api.Syn = {}
 
 function Api.Number:Range(num, min, max)
   if not tonumber(num) or not tonumber(min) or not tonumber(max) then
@@ -437,6 +438,139 @@ function Api.Number:IntoNotation(number)
     else
         return tostring(number)
     end
+end
+
+function Api.Syn:PrintConstants(func)
+ if typeof(func) ~= "function" then
+warn("The variable must be a function")
+   return 
+ end
+ 
+ if iscclosure(func) then
+warn("The function is CClosure. The function cannot get information")
+   return
+ end
+  for i, v in next, debug.getconstants(func) do
+print(i, v)
+  end
+end
+
+function Api.Syn:PrintValues(func)
+ if typeof(func) ~= "function" then
+warn("The variable must be a function")
+   return 
+ end
+ 
+ if iscclosure(func) then
+warn("The function is CClosure. The function cannot get information")
+   return
+ end
+  for i, v in next, debug.getupvalues(func) do
+print(i, v)
+  end
+end
+
+function Api.Syn:GetScripts(var)
+local tabl = {}
+  for _, v in next, var:GetDescendants() do
+    if v:IsA("BaseScript") or v:IsA("LocalScript") or v:IsA("ModuleScript") then
+table.insert(v, tabl)
+    end
+  end
+  return tabl
+end
+
+function Api.Syn:GetSValues(variabl)
+local tabl = {}
+  for _, v in next, variabl:GetDescendants() do
+    if v:IsA("StringValue") or v:IsA("NumberValue") or v:IsA("BoolValue") or v:IsA("IntValue") or v:IsA("ObjectValue") then
+table.insert(v, tabl)
+    end
+  end
+  return tabl
+end
+
+function Api.Syn:IdentifySuperclass(var)
+  if var:IsA("BasePart") == true then
+return "BasePart"
+ elseif var:IsA("GuiObject") == true then
+return "GuiObject"
+ elseif var:IsA("BaseScript") == true then
+return "BaseScript"
+ elseif var:IsA("Light") == true then
+return "Light"
+ elseif var:IsA("Effect") == true then
+return "Effect"
+ elseif var:IsA("UIBase") == true then
+return "UIBase"
+ elseif var:IsA("GuiBase") == true then
+return "GuiBase"
+ else
+return "Unknown"
+  end
+end
+
+function Api.Syn:DisableConnections(signlal)
+ for i, signal in next, getconnections(signlal) do
+  if typeof(signal) == "RBXScriptConnection" then
+signal:Disconnect()
+  elseif typeof(signal) == "RBXScriptSignal" then
+signal:Disable()
+  end
+ end
+end
+
+function Api.Syn:ProtectInstance(screng)
+local protect = hookmetamethod(game, "__namecall", function(self,...)
+   if self == screng and screng ~= nil and getnamecallmetod() == "FindFirstChild" or getnamecallmethod() == "GetFullName" or getnamecallmethod() == "FindFirstChildOfClass" then
+    return 
+   end
+  return protect(self, ...)
+ end)
+end
+
+function Api.Syn:AntiDestroy(instance)
+local protect = hookmetamethod(game, "__namecall", function(self,...)
+   if self == screng and screng ~= nil and getnamecallmetod() == "Destroy" or getnamecallmethod() == "Remove" then
+    return 
+   end
+  return protect(self, ...)
+ end)
+end
+
+function Api.Syn.LockTableArg(tbl, key)
+    local originalValue = tbl[key]
+    local mt = {
+        __newindex = function(table, index, value)
+            error("Attempt to modify a locked value")
+        end,
+        __index = function(table, index)
+            return originalValue
+        end
+    }
+    
+    setmetatable(tbl, mt)
+end
+
+local function Anti.Syn.Ishiddenproperty(prop, nam)
+  local succes, err = pcall(function()
+    return prop[nam] ~= nil
+  end)
+  
+  if succes then
+return false
+   else
+     local suc, er = pcall(function()
+       return gethiddenproperty(prop, nam) ~= nil
+    end)
+    
+     if suc then
+return true
+       else
+ warn("Property " .. tostring(nam) .. " In principle it does not exist")
+return nil  
+     end
+  end
 end
 
 return Api
