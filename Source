@@ -552,7 +552,7 @@ function Api.Syn.LockTableArg(tbl, key)
     setmetatable(tbl, mt)
 end
 
-local function Anti.Syn.Ishiddenproperty(prop, nam)
+local function Api.Syn.Ishiddenproperty(prop, nam)
   local succes, err = pcall(function()
     return prop[nam] ~= nil
   end)
