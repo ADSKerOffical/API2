@@ -538,7 +538,7 @@ local protect = hookmetamethod(game, "__namecall", function(self,...)
  end)
 end
 
-function Api.Syn.LockTableArg(tbl, key)
+function Api.Syn:LockTableArg(tbl, key)
     local originalValue = tbl[key]
     local mt = {
         __newindex = function(table, index, value)
@@ -552,7 +552,7 @@ function Api.Syn.LockTableArg(tbl, key)
     setmetatable(tbl, mt)
 end
 
-local function Api.Syn.Ishiddenproperty(prop, nam)
+local function Api.Syn:Ishiddenproperty(prop, nam)
   local succes, err = pcall(function()
     return prop[nam] ~= nil
   end)
