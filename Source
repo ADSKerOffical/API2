@@ -480,14 +480,12 @@ table.insert(v, tabl)
   return tabl
 end
 
-function Api.Syn:GetSValues(variabl)
-local tabl = {}
+function Api.Syn:PrintSValues(variabl)
   for _, v in next, variabl:GetDescendants() do
     if v:IsA("StringValue") or v:IsA("NumberValue") or v:IsA("BoolValue") or v:IsA("IntValue") or v:IsA("ObjectValue") then
-table.insert(v, tabl)
+print(v.ClassName, v:GetFullName())
     end
   end
-  return tabl
 end
 
 function Api.Syn:IdentifySuperclass(var)
